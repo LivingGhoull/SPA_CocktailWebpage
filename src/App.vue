@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import Navigation from './components/Navigation.vue';
+import Header from './components/Header.vue';
 /*
 <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
@@ -16,7 +16,7 @@ import Navigation from './components/Navigation.vue';
 */
 </script>
 <template>
-    <Navigation/>
+    <Header/>
     <main>
         
     </main>
