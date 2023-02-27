@@ -20,12 +20,16 @@
     <button @click="Exit" id="exit"
     >X</button>
 
-    <div v-if="showLogin" id="login"  >
-        <label for="">Email</label>
-        <input type="text">
+    <div v-if="showLogin" id="login">
+        <label for="">{{labelName}}</label>
+        <input v-if="loginMethodEmail" type="text" name="username">
+        <input v-else type="text" name="email">
+
+        <label for="">Use username instead</label>
+        <input @change="LoginMethod" id="check" type="checkbox">
 
         <label for="">Password</label>
-        <input type="text">
+        <input type="text" name="password">
         
         <button @click="Login">Login</button>
     </div>
@@ -59,11 +63,12 @@ export default {
             showSignIn: false,
             showLoginHolder: false,
 
+            loginMethodEmail: true,
+            labelName: "Email",
 
             email: "admin@hotmail.dk",
             username: "Admin",
             password: "1234",
-
         }
     },
     methods: {
@@ -82,7 +87,6 @@ export default {
             this.showSignIn = true
             this.showLoginHolder = true
             this.showLoginHolder = true
-
         },
         Exit() {
             this.showLoginHolder = false
@@ -95,133 +99,152 @@ export default {
             this.isLoggedIn = false
             this.Exit()
         },
+        LoginMethod() {
+            if (this.loginMethodEmail) {
+                this.labelName = "Username"
+                this.loginMethodEmail = false
+            } else {
+                this.labelName = "Email"
+                this.loginMethodEmail = true
+            }
+
+
+        },
+
 
     }
 }
 </script>
 
 <style>
+    #showSignOrLog {
+        z-index: 1;
+        position: absolute;
+        top: 35%;
+        bottom: 20%;
+        left: 30%;
+        right: 30%;
+        border-radius: 5%;
+        background-color: #78a8e2;
+    }
 
+    #showSignOrLog #login{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: absolute;
+        top: 0%;
+        bottom: 20%;
+        left: 25%;
+        right: 25%;
+    }
 
-#showSignOrLog {
-    z-index: 1;
-    position: absolute;
-    top: 35%;
-    bottom: 20%;
-    left: 30%;
-    right: 30%;
-    border-radius: 5%;
-    background-color: #78a8e2;
-}
+    #login input{
+        background-color: #fff;
+        height: 10%;
+        padding: 5%;
+        border: 1px solid rgb(54, 39, 185);
+        border-radius: 5px;
+        font-family: Arial, sans-serif;
+        font-size: 1rem;
+    }
 
-#showSignOrLog #login{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: absolute;
-    top: 0%;
-    bottom: 20%;
-    left: 25%;
-    right: 25%;
-}
+    #login label{
+        padding-top: 5%;
+    }
 
-#login input{
-    background-color: #fff;
-    height: 10%;
-    padding: 5%;
-    font-family: Arial, sans-serif;
-    font-size: 1rem;
-}
+    #login button{
+        margin-top: 5%;
+    }
 
-#login label{
-    padding-top: 5%;
-}
+    input[type="checkbox"] {
+        -webkit-appearance: checkbox !important;
+        -moz-appearance: checkbox !important;
+        -ms-appearance: checkbox !important;
+        -o-appearance: checkbox !important;
+        appearance: checkbox !important;
+        width: 20px;
+    }
+    
 
-#login button{
-    margin-top: 5%;
-}
+    #showSignOrLog #exit{
+        float: right;
+        margin-right: 20px;
+        margin-top: 20px;
+    }
 
-#showSignOrLog #exit{
-    float: right;
-    margin-right: 20px;
-    margin-top: 20px;
-}
+    #main-header #logo {
+        margin-left: 20%;
+    }
 
-#main-header #logo {
-    margin-left: 20%;
-}
+    #backgroundCheck {
+        position: absolute; /*position: fixed;*/
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
 
-#backgroundCheck {
-    position: absolute; /*position: fixed;*/
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-}
+    #main-header {
+        display: flex;
+        justify-content: space-between;
+        box-shadow: 0px 4px 15px #3276c9;
+    }
 
-#main-header {
-    display: flex;
-    justify-content: space-between;
-    box-shadow: 0px 4px 15px #3276c9;
-}
+    .userAccount{
+        margin-right: 20%;
+        align-self: center;
+    }
 
+    .userAccount button{
+        margin: 5px;
+    }
 
-.userAccount{
-    margin-right: 20%;
-    align-self: center;
-}
+    .userAccount p{
+        display: inline-block;
+        border: none;
+        border-radius: 10px;
+        padding: 1rem 2rem;
+        margin-right: 40px;
+        text-decoration: none;
+        background-color: #F2A71E ;
+        color: #3276c9;
+        font-family: Arial, sans-serif;
+        font-size: 1rem;
+        text-align: center;
+        transition: background 250ms ease-in-out, 
+        transform 150ms ease;
+    }
 
-.userAccount button{
-    margin: 5px;
-}
+    button {
+        display: inline-block;
+        border: none;
+        border-radius: 10px;
+        padding: 1rem 2rem;
+        text-decoration: none;
+        background: #3276c9;
+        color: #ffffff;
+        font-family: Arial, sans-serif;
+        font-size: 1rem;
+        cursor: pointer;
+        text-align: center;
+        transition: background 250ms ease-in-out, 
+        transform 150ms ease;
+    }
 
-.userAccount p{
-    display: inline-block;
-    border: none;
-    border-radius: 10px;
-    padding: 1rem 2rem;
-    margin-right: 40px;
-    text-decoration: none;
-    background-color: #F2A71E ;
-    color: #3276c9;
-    font-family: Arial, sans-serif;
-    font-size: 1rem;
-    text-align: center;
-    transition: background 250ms ease-in-out, 
-    transform 150ms ease;
-}
+    button:hover {
+        background: #F2A71E;
+    }
 
+    button:focus {
+        outline: 1px solid #fff;
+        outline-offset: -4px;
+    }
 
-button {
-    display: inline-block;
-    border: none;
-    border-radius: 10px;
-    padding: 1rem 2rem;
-    margin: 0;
-    text-decoration: none;
-    background: #3276c9;
-    color: #ffffff;
-    font-family: Arial, sans-serif;
-    font-size: 1rem;
-    cursor: pointer;
-    text-align: center;
-    transition: background 250ms ease-in-out, 
-    transform 150ms ease;
-}
-
-button:hover {
-    background: #F2A71E;
-}
-
-button:focus {
-    outline: 1px solid #fff;
-    outline-offset: -4px;
-}
-
-button:active {
-    transform: scale(0.99);
-}
+    button:active {
+        transform: scale(0.99);
+    }
 
 
 @media (pointer:none), (pointer:coarse) {
@@ -306,37 +329,5 @@ button:active {
         transition: background 250ms ease-in-out, 
         transform 150ms ease;
     }
-
-
-    button {
-        display: inline-block;
-        border: none;
-        border-radius: 10px;
-        padding: 1rem 2rem;
-        margin: 0;
-        text-decoration: none;
-        background: #3276c9;
-        color: #ffffff;
-        font-family: Arial, sans-serif;
-        font-size: 1rem;
-        cursor: pointer;
-        text-align: center;
-        transition: background 250ms ease-in-out, 
-        transform 150ms ease;
-    }
-
-    button:hover {
-        background: #F2A71E;
-    }
-
-    button:focus {
-        outline: 1px solid #fff;
-        outline-offset: -4px;
-    }
-
-    button:active {
-        transform: scale(0.99);
-    }
 }
-
 </style>
