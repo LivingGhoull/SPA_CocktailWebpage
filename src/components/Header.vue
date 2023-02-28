@@ -20,34 +20,37 @@
     <button @click="Exit" id="exit"
     >X</button>
 
-    <div v-if="showLogin" id="login">
-        <label for="">{{labelName}}</label>
-        <input v-if="loginMethodEmail" type="text" name="username">
-        <input v-else type="text" name="email">
+    <div v-if="showLogin" class="login">
+        <form action="">
+            <label for="">{{labelName}}</label>
+            <input v-if="loginMethodEmail" type="text" v-model="username">
+            <input v-else type="text" v-model="email">
 
-        <label for="">Use username instead</label>
-        <input @change="LoginMethod" id="check" type="checkbox">
+            <label for="">Use username instead</label>
+            <input @change="LoginMethod" id="check" type="checkbox">
 
-        <label for="">Password</label>
-        <input type="text" name="password">
-        
-        <button @click="Login">Login</button>
+            <label for="">Password</label>
+            <input type="text" v-model="password">
+            <button @click="Login">Login</button>
+        </form>
     </div>
     
-    <div v-if="showSignIn" id="login">
-        <label for="">Email</label>
-        <input type="text">
+    <div v-if="showSignIn" class="login">
+        <form action="">
+            <label for="">Email</label>
+            <input type="text" v-model="email">
 
-        <label for="">Username</label>
-        <input type="text">
+            <label for="">Username</label>
+            <input type="text" v-model="username">
 
-        <label for="">Password</label>
-        <input type="text">
-        
-        <label for="">Confirm password</label>
-        <input type="text">
+            <label for="">Password</label>
+            <input type="text" v-model="password">
+            
+            <label for="">Confirm password</label>
+            <input type="text" v-model="confirmPassword">
 
-        <button>Login</button>
+            <button>Login</button>
+        </form>
     </div>
 </div>
 
@@ -66,9 +69,13 @@ export default {
             loginMethodEmail: true,
             labelName: "Email",
 
-            email: "admin@hotmail.dk",
-            username: "Admin",
-            password: "1234",
+            email: "",
+            username: "",
+            password: "",
+            confirmPassword: "",
+
+            error: "",
+
         }
     },
     methods: {
@@ -107,11 +114,7 @@ export default {
                 this.labelName = "Email"
                 this.loginMethodEmail = true
             }
-
-
         },
-
-
     }
 }
 </script>
@@ -120,7 +123,7 @@ export default {
     #showSignOrLog {
         z-index: 1;
         position: absolute;
-        top: 35%;
+        top: 30%;
         bottom: 20%;
         left: 30%;
         right: 30%;
@@ -128,33 +131,31 @@ export default {
         background-color: #78a8e2;
     }
 
-    #showSignOrLog #login{
+    .login form{
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        position: absolute;
-        top: 0%;
-        bottom: 20%;
-        left: 25%;
-        right: 25%;
+        margin-top: 10%;
+        padding-left: 20%;
+        padding-right: 30%;
     }
 
-    #login input{
+    .login label{
+        margin-top: 5%;
+    }
+
+    .login button{
+        margin-top: 5%;
+        margin-left: 30%;
+        margin-right: 30%;
+    }
+
+    .login input{
         background-color: #fff;
-        height: 10%;
-        padding: 5%;
+        padding: 2%;
         border: 1px solid rgb(54, 39, 185);
         border-radius: 5px;
         font-family: Arial, sans-serif;
         font-size: 1rem;
-    }
-
-    #login label{
-        padding-top: 5%;
-    }
-
-    #login button{
-        margin-top: 5%;
     }
 
     input[type="checkbox"] {
@@ -166,7 +167,6 @@ export default {
         width: 20px;
     }
     
-
     #showSignOrLog #exit{
         float: right;
         margin-right: 20px;
@@ -249,41 +249,46 @@ export default {
 
 @media (pointer:none), (pointer:coarse) {
     #showSignOrLog {
-    z-index: 1;
-    position: absolute;
-    top: 20%;
-    bottom: 40%;
-    left: 10%;
-    right: 10%;
-    border-radius: 5%;
-    background-color: #78a8e2;
-    }
-
-    #showSignOrLog #login{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        z-index: 1;
         position: absolute;
-        top: 0%;
+        top: 30%;
         bottom: 20%;
         left: 15%;
-        right: 35%;
+        right: 15%;
+        border-radius: 5%;
+        background-color: #78a8e2;
     }
 
-    #login input{
+    .login form{
+        display: flex;
+        flex-direction: column;
+        margin-top: 25%;
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+
+    .login label{
+        margin-top: 5%;
+    }
+
+    .login button{
+        margin-top: 5%;
+        margin-left: 30%;
+        margin-right: 30%;
+    }
+
+    .login input{
         background-color: #fff;
-        height: 10%;
-        padding: 5%;
+        padding: 2%;
+        border: 1px solid rgb(54, 39, 185);
+        border-radius: 5px;
         font-family: Arial, sans-serif;
         font-size: 1rem;
     }
 
-    #login label{
-        padding-top: 5%;
-    }
-
     #main-header #logo {
     margin-left: 10%;
+    padding-right: 10%;
     }
 
     #showSignOrLog #exit{
@@ -321,7 +326,7 @@ export default {
         padding: 1rem 2rem;
         margin-right: 40px;
         text-decoration: none;
-        background-color: #F2A71E ;
+        background-color: #F2A71E;
         color: #3276c9;
         font-family: Arial, sans-serif;
         font-size: 1rem;
