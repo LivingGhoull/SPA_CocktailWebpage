@@ -21,36 +21,32 @@
     >X</button>
 
     <div v-if="showLogin" class="login">
-        <form action="">
-            <label for="">{{labelName}}</label>
-            <input v-if="loginMethodEmail" type="text" v-model="username">
-            <input v-else type="text" v-model="email">
+        <label for="">{{labelName}}</label>
+        <input v-if="!loginMethodEmail" type="text" v-model="username">
+        <input v-else type="text" v-model="email">
 
-            <label for="">Use username instead</label>
-            <input @change="LoginMethod" id="check" type="checkbox">
+        <label for="">Use username instead</label>
+        <input @change="LoginMethod" id="check" type="checkbox">
 
-            <label for="">Password</label>
-            <input type="text" v-model="password">
-            <button @click="Login">Login</button>
-        </form>
+        <label for="">Password</label>
+        <input type="text" v-model="password">
+        <button @click="Login">Login</button>
     </div>
     
     <div v-if="showSignIn" class="login">
-        <form action="">
-            <label for="">Email</label>
-            <input type="text" v-model="email">
+        <label for="">Email</label>
+        <input type="text" v-model="email">
 
-            <label for="">Username</label>
-            <input type="text" v-model="username">
+        <label for="">Username</label>
+        <input type="text" v-model="username">
 
-            <label for="">Password</label>
-            <input type="text" v-model="password">
-            
-            <label for="">Confirm password</label>
-            <input type="text" v-model="confirmPassword">
+        <label for="">Password</label>
+        <input type="text" v-model="password">
+        
+        <label for="">Confirm password</label>
+        <input type="text" v-model="confirmPassword">
 
-            <button>Login</button>
-        </form>
+        <button>Login</button>
     </div>
 </div>
 
@@ -58,6 +54,8 @@
 </template>
 
 <script>
+import { addUser } from '../firebase';
+
 export default {
     data(){
         return {
@@ -66,16 +64,15 @@ export default {
             showSignIn: false,
             showLoginHolder: false,
 
-            loginMethodEmail: true,
+            loginMethodEmail: false,
             labelName: "Email",
 
-            email: "",
-            username: "",
-            password: "",
-            confirmPassword: "",
+            email: "jesper@hotmail.dk",
+            username: "jesper",
+            password: "1234",
+            confirmPassword: "1234",
 
             error: "",
-
         }
     },
     methods: {
@@ -98,7 +95,8 @@ export default {
         Exit() {
             this.showLoginHolder = false
         },
-        Login() {
+        async Login() {
+            await addUser()
             this.isLoggedIn = true
             this.Exit()
         },
@@ -131,7 +129,7 @@ export default {
         background-color: #78a8e2;
     }
 
-    .login form{
+    .login{
         display: flex;
         flex-direction: column;
         margin-top: 10%;
@@ -203,7 +201,7 @@ export default {
 
     .userAccount p{
         display: inline-block;
-        border: none;
+        border: 1px solid rgb(129, 60, 11);
         border-radius: 10px;
         padding: 1rem 2rem;
         margin-right: 40px;
@@ -219,7 +217,7 @@ export default {
 
     button {
         display: inline-block;
-        border: none;
+        border: 1px solid rgb(54, 39, 185);
         border-radius: 10px;
         padding: 1rem 2rem;
         text-decoration: none;
@@ -229,7 +227,7 @@ export default {
         font-size: 1rem;
         cursor: pointer;
         text-align: center;
-        transition: background 250ms ease-in-out, 
+        transition: background 250ms ease-in-out
         transform 150ms ease;
     }
 
@@ -259,7 +257,7 @@ export default {
         background-color: #78a8e2;
     }
 
-    .login form{
+    .login {
         display: flex;
         flex-direction: column;
         margin-top: 25%;
@@ -275,6 +273,7 @@ export default {
         margin-top: 5%;
         margin-left: 30%;
         margin-right: 30%;
+        
     }
 
     .login input{
@@ -327,7 +326,7 @@ export default {
         margin-right: 40px;
         text-decoration: none;
         background-color: #F2A71E;
-        color: #3276c9;
+        color: rgb(54, 39, 185);
         font-family: Arial, sans-serif;
         font-size: 1rem;
         text-align: center;
