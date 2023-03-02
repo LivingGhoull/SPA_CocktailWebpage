@@ -2,7 +2,6 @@
 import { RouterLink, RouterView } from 'vue-router'
 
 </script>
-
 <template>
     <div id="underHeader">
         <button>filter</button>
@@ -12,83 +11,135 @@ import { RouterLink, RouterView } from 'vue-router'
             <input type="text" name="" id="search" placeholder="Search">
             <button id="searchConfirm">Submit</button>
         </div>
-        
-        <button><RouterLink :to=url>Suprise me!</RouterLink> </button> 
+        <button @click="GetRandomDrink()">Suprise me!</button> 
     </div>
 
     <table id="drinks"></table>
 
     <button id="lookAtMore">Look at more drinks</button>
 </template>
-
-
 <script>
-//<RouterLink :to="{ name: 'Cocktail', params: { id: url}}" >suprise me! </RouterLink>
 
 export default {
     data() {
          return {
-            url:''
+            
         }
     },
     created() {
-    window.addEventListener('load', async () => {
-        this.GetRandomDrink()
+        window.addEventListener('load', async () => {
+            const drinks = document.getElementById('drinks')
 
+            if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                // Code for mobile devices
+                for (let index = 0; index < 3; index++) {
+                    let tableRow = document.createElement('tr')
+                    drinks.appendChild(tableRow)  
 
-        const drinks = document.getElementById('drinks')
-
-        for (let index = 0; index < 2; index++) {
-            let tableRow = document.createElement('tr')
-            drinks.appendChild(tableRow)  
-
-            for (let index = 0; index < 3; index++) {
+                    for (let index = 0; index < 2; index++) {
+                        
+                        let url = 'https://thecocktaildb.com/api/json/v1/1/random.php'
+                        let response = await fetch(url)
+                        let data = await response.json()
+                        let drinkArray = data.drinks[0]
                 
-                let url = 'https://thecocktaildb.com/api/json/v1/1/random.php'
-                let response = await fetch(url)
-                let data = await response.json()
-                let drinkArray = data.drinks[0]
-           
-            
-                let tableColums = document.createElement('td')
-                tableColums.style.paddingTop = '2%'
-                tableRow.appendChild(tableColums)  
+                    
+                        let tableColums = document.createElement('td')
+                        tableColums.style.paddingTop = '2%'
+                        tableRow.appendChild(tableColums)  
 
 
-                let eatchDrink = document.createElement('div')
-                eatchDrink.style.backgroundColor = '#3276c9'
-                eatchDrink.style.border = '1px solid rgb(54, 39, 185)'
-                eatchDrink.style.borderRadius = '10px'
-                eatchDrink.style.padding = "20px"
-                eatchDrink.style.marginLeft = "20%"
-                eatchDrink.style.marginRight = "20%"
-                tableColums.appendChild(eatchDrink)        
+                        let eatchDrink = document.createElement('div')
+                        eatchDrink.style.backgroundColor = '#3276c9'
+                        eatchDrink.style.border = '1px solid rgb(54, 39, 185)'
+                        eatchDrink.style.borderRadius = '10px'
+                        eatchDrink.style.padding = "20px"
+                        eatchDrink.style.marginLeft = "10%"
+                        eatchDrink.style.marginRight = "10%"
+                        eatchDrink.style.cursor = "pointer" 
+
+                        tableColums.appendChild(eatchDrink)       
+
+                        eatchDrink.addEventListener('click', function handleClick() {
+                            window.location.href = `/cocktail/${drinkArray.idDrink}`
+                        });
 
 
-                let drinkName = document.createElement('p')
-                drinkName.style.color = "#fff"
-                drinkName.innerHTML = drinkArray.strDrink
-                drinkName.style.fontFamily = 'Arial, sans-serif'
-                drinkName.style.paddingBottom = "4%"
-                drinkName.style.textAlign = "center"
-                eatchDrink.appendChild(drinkName)
+                        let drinkName = document.createElement('p')
+                        drinkName.style.color = "#fff"
+                        drinkName.innerHTML = drinkArray.strDrink
+                        drinkName.style.fontFamily = 'Arial, sans-serif'
+                        drinkName.style.paddingBottom = "4%"
+                        drinkName.style.textAlign = "center"
+                        eatchDrink.appendChild(drinkName)
 
 
-                let drinkIMG = document.createElement('img')
-                drinkIMG.src = drinkArray.strDrinkThumb
-                eatchDrink.appendChild(drinkIMG)  
-            }            
-        }        
-    })},
+                        let drinkIMG = document.createElement('img')
+                        drinkIMG.src = drinkArray.strDrinkThumb
+                        eatchDrink.appendChild(drinkIMG)  
+                    }            
+                } 
+            } else {
+                // Code for desktop devices
+                for (let index = 0; index < 2; index++) {
+                    let tableRow = document.createElement('tr')
+                    drinks.appendChild(tableRow)  
+
+                    for (let index = 0; index < 3; index++) {
+                        
+                        let url = 'https://thecocktaildb.com/api/json/v1/1/random.php'
+                        let response = await fetch(url)
+                        let data = await response.json()
+                        let drinkArray = data.drinks[0]
+                
+                    
+                        let tableColums = document.createElement('td')
+                        tableColums.style.paddingTop = '2%'
+                        tableRow.appendChild(tableColums)  
+
+
+                        let eatchDrink = document.createElement('div')
+                        eatchDrink.style.backgroundColor = '#3276c9'
+                        eatchDrink.style.border = '1px solid rgb(54, 39, 185)'
+                        eatchDrink.style.borderRadius = '10px'
+                        eatchDrink.style.padding = "20px"
+                        eatchDrink.style.marginLeft = "20%"
+                        eatchDrink.style.marginRight = "20%"
+                        eatchDrink.style.cursor = "pointer" 
+
+                        tableColums.appendChild(eatchDrink)       
+
+                        eatchDrink.addEventListener('click', function handleClick() {
+                            window.location.href = `/cocktail/${drinkArray.idDrink}`
+                        });
+
+
+                        let drinkName = document.createElement('p')
+                        drinkName.style.color = "#fff"
+                        drinkName.innerHTML = drinkArray.strDrink
+                        drinkName.style.fontFamily = 'Arial, sans-serif'
+                        drinkName.style.paddingBottom = "4%"
+                        drinkName.style.textAlign = "center"
+                        eatchDrink.appendChild(drinkName)
+
+
+                        let drinkIMG = document.createElement('img')
+                        drinkIMG.src = drinkArray.strDrinkThumb
+                        eatchDrink.appendChild(drinkIMG)  
+                    }            
+                } 
+            }       
+        }
+    )},
     methods: {
         async GetRandomDrink() {
             let url = 'https://thecocktaildb.com/api/json/v1/1/random.php'
             let response = await fetch(url)
             let data = await response.json()
             let drinkArray = data.drinks[0]
-            this.url = '/cocktail/' + drinkArray.idDrink
+            console.log(`/cocktail/${drinkArray.idDrink}`)
+            window.location.href = `/cocktail/${drinkArray.idDrink}`
         },
-
     }
 }
 </script>
@@ -116,11 +167,14 @@ export default {
     }
 
     /* Drinks being shown */
-    #drinks {
+    table {
+       width: 100%;
+       margin-bottom: 2%;
+
+    }
+
+    #drinks table {
         margin-bottom: 2%;
-        margin-left: 2%;
-        margin-right: 2%;
-        text-align: center;
     }
     
     /* Button in the bottom of the site */
@@ -147,6 +201,7 @@ export default {
         margin-left:5%;
         width: 90%;
     }
+
 }
 
 </style>

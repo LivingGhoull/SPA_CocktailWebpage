@@ -21,6 +21,8 @@
     >X</button>
 
     <div v-if="showLogin" class="login">
+        <p v-if=errorActive id="error">Error: Something went wrong check your inputs!</p>
+
         <label for="">{{labelName}}</label>
         <input v-if="!loginMethodEmail" type="text" v-model="username">
         <input v-else type="text" v-model="email">
@@ -34,6 +36,7 @@
     </div>
     
     <div v-if="showSignIn" class="login">
+        <p v-if=errorActive id="error">Error: Something went wrong check your inputs!</p>
         <label for="">Email</label>
         <input type="text" v-model="email">
 
@@ -64,15 +67,15 @@ export default {
             showSignIn: false,
             showLoginHolder: false,
 
-            loginMethodEmail: false,
+            loginMethodEmail: true,
             labelName: "Email",
 
-            email: "jesper@hotmail.dk",
-            username: "jesper",
-            password: "1234",
-            confirmPassword: "1234",
+            email: "Email",
+            username: "Usernmae",
+            password: "passowrd1234",
+            confirmPassword: "passowrd1234",
 
-            error: "",
+            errorActive: false,
         }
     },
     methods: {
@@ -180,7 +183,7 @@ export default {
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 130%;
         background-color: rgba(0, 0, 0, 0.5);
     }
 
@@ -229,6 +232,7 @@ export default {
         text-align: center;
         transition: background 250ms ease-in-out
         transform 150ms ease;
+        font-weight:bold;
     }
 
     button:hover {
@@ -244,6 +248,13 @@ export default {
         transform: scale(0.99);
     }
 
+    #error {
+        color: rgba(163, 0, 0, 0.719);
+    }
+
+    p {
+        font-family: Arial, sans-serif;
+    }
 
 @media (pointer:none), (pointer:coarse) {
     #showSignOrLog {
