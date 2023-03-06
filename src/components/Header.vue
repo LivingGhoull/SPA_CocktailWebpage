@@ -58,7 +58,7 @@
 
 <script > 
 import {functions } from '../firebase'
-import {httpsCallable } from "firebase/functions";// TODO: Add SDKs for Firebase products that you want to use
+import {httpsCallable } from "firebase/functions";
 
 export default {
     data(){
@@ -67,7 +67,6 @@ export default {
             showLogin: false,
             showSignIn: false,
             showLoginHolder: false,
-
 
             //login
             loginEmail: "jesper",
