@@ -44,7 +44,7 @@
         <label for="">Confirm password</label>
         <input type="password" v-model="signConfirmPassword">
 
-        <button>Login</button>
+        <button @click="SignUp">SignUp</button>
     </div>
 </div>
 
@@ -109,12 +109,17 @@ export default {
             } catch (error) {
                 console.error(error);
             }
-            
         },
         async SignUp() {
-           
-            this.isLoggedIn = true
-            this.Exit()
+            const signUp = httpsCallable(functions, 'signUp');
+            try {
+                const result = await signUp({ email: this.signEmail, username: this.signUsername});
+                this.isLoggedIn = true
+                this.Exit()
+                console.log(result);
+            } catch (error) {
+                console.error(error);
+            }
         },
         Logout() {
             this.isLoggedIn = false
