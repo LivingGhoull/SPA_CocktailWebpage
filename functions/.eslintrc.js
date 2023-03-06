@@ -11,6 +11,8 @@ module.exports = {
     "google",
   ],
   rules: {
+    "eol-last": 0,
+    "no-multiple-empty-lines": ["error", {"max": 1, "maxEOF": 0}],
     "no-restricted-globals": ["error", "name", "length"],
     "prefer-arrow-callback": "error",
     "quotes": ["error", "double", {"allowTemplateLiterals": true}],

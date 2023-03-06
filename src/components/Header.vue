@@ -17,37 +17,36 @@
 </div>
 
 <div v-if="showLoginHolder" id="showSignOrLog">
-    <button @click="Exit" id="exit"
-    >X</button>
+    <button @click="Exit" id="exit">X</button>
 
     <div v-if="showLogin" class="login">
-        <p v-if=errorActive id="error">Error: Something went wrong check your inputs!</p>
+        <p v-if=loginErrorActive id="error">Error: Something went wrong check your inputs!</p>
 
         <label for="">{{labelName}}</label>
-        <input v-if="!loginMethodEmail" type="text" v-model="username">
-        <input v-else type="text" v-model="email">
+        <input v-if="!loginMethodEmail" type="text" v-model="loginUserMail">
+        <input v-else type="email" v-model="loginEmail">
 
         <label for="">Use username instead</label>
         <input @change="LoginMethod" id="check" type="checkbox">
 
         <label for="">Password</label>
-        <input type="text" v-model="password">
-        <button @click="Login">Login</button>
+        <input type="text" v-model="loginPassword">
+        <button @click="callMyFunction">Login</button>
     </div>
     
     <div v-if="showSignIn" class="login">
-        <p v-if=errorActive id="error">Error: Something went wrong check your inputs!</p>
+        <p v-if=signErrorActive id="error">Error: Something went wrong check your inputs!</p>
         <label for="">Email</label>
-        <input type="text" v-model="email">
+        <input type="text" v-model="signEmail">
 
         <label for="">Username</label>
-        <input type="text" v-model="username">
+        <input type="text" v-model="signUsername">
 
         <label for="">Password</label>
-        <input type="text" v-model="password">
+        <input type="password" v-model="signPassword">
         
         <label for="">Confirm password</label>
-        <input type="text" v-model="confirmPassword">
+        <input type="password" v-model="signConfirmPassword">
 
         <button>Login</button>
     </div>
@@ -56,8 +55,10 @@
 <div v-if="showLoginHolder" id="backgroundCheck"></div>
 </template>
 
-<script>
-import { addUser } from '../firebase';
+
+<script > 
+import {functions } from '../firebase'
+import { getFunctions, httpsCallable } from "firebase/functions";// TODO: Add SDKs for Firebase products that you want to use
 
 export default {
     data(){
@@ -67,18 +68,37 @@ export default {
             showSignIn: false,
             showLoginHolder: false,
 
+
+            //login
+            loginEmail: "jesper",
+            loginUsername: "jesper",
+            loginPassword: "",
+
             loginMethodEmail: true,
             labelName: "Email",
 
-            email: "Email",
-            username: "Usernmae",
-            password: "passowrd1234",
-            confirmPassword: "passowrd1234",
+            loginErrorActive: false,
 
-            errorActive: false,
+            //signUp
+            signEmail: "",
+            signUsername: "",
+            signPassword: "",
+            signConfirmPassword: "",
+
+            signErrorActive: false,
         }
     },
     methods: {
+        async callMyFunction() {
+            const sayHello = httpsCallable(functions, 'sayHello');
+            try {
+                const result = await sayHello({ name: 'Jesper' });
+                console.log(result);
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
         DisplayLogin() {
             if (this.showSignIn) {
                 this.showSignIn = false
@@ -98,8 +118,7 @@ export default {
         Exit() {
             this.showLoginHolder = false
         },
-        async Login() {
-            await addUser()
+        Login() {
             this.isLoggedIn = true
             this.Exit()
         },

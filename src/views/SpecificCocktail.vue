@@ -130,20 +130,15 @@
             let response = await fetch(url)
             let data = await response.json()
             let drinkArray = data.drinks[0]
-            console.log(`/cocktail/${drinkArray.idDrink}`)
             window.location.href = `/cocktail/${drinkArray.idDrink}`
         },
         AllIncredients() {
             let ul = document.getElementById('ingredientsList')
 
             for (let i = 0; i < this.drinkIngredients.length; i++) {
-                console.log(this.drinkIngredients[i])
-                console.log(this.drinkMeasurement[i])
-
                 if (this.drinkIngredients[i] == null) {
                     break
                 }
-
                 let li = document.createElement('li')
                 li.innerHTML = `'${this.drinkIngredients[i]}', ${this.drinkMeasurement[i]}`
                 li.style.padding = '2px'

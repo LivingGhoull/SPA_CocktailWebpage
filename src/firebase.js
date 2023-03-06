@@ -1,9 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, doc, setDoc} from "firebase/firestore";
-
-
-// TODO: Add SDKs for Firebase products that you want to use
+import { getFunctions, httpsCallable } from "firebase/functions";// TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
@@ -20,24 +17,5 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const users = doc(db, 'users/GcOpL4j9nahdLWUd89GV');
-
-export async function addUser() {
-    console.log("in ?????????")
-    const docData = {
-        first: "Alan",
-        middle: "Mathison",
-        last: "Turing",
-        born: 1912
-    };
-    try {
-        await setDoc(users, docData)
-        console.log('User been added to the db')
-    } catch (error) {
-        console.log(`Error happend in "addUser": ${error}`)
-    }
-}
-
+export const functions = getFunctions(app);
 
