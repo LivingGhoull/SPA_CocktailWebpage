@@ -22,16 +22,12 @@
     <div v-if="showLogin" class="login">
         <p v-if=loginErrorActive id="error">Error: Something went wrong check your inputs!</p>
 
-        <label for="">{{labelName}}</label>
-        <input v-if="!loginMethodEmail" type="text" v-model="loginUserMail">
-        <input v-else type="email" v-model="loginEmail">
-
-        <label for="">Use username instead</label>
-        <input @change="LoginMethod" id="check" type="checkbox">
+        <label for="">Email</label>
+        <input type="email" v-model="loginEmail">
 
         <label for="">Password</label>
-        <input type="text" v-model="loginPassword">
-        <button @click="callMyFunction">Login</button>
+        <input type="password" v-model="loginPassword">
+        <button @click="Login">Login</button>
     </div>
     
     <div v-if="showSignIn" class="login">
@@ -69,13 +65,8 @@ export default {
             showLoginHolder: false,
 
             //login
-            loginEmail: "jesper",
-            loginUsername: "jesper",
+            loginEmail: "",
             loginPassword: "",
-
-            loginMethodEmail: true,
-            labelName: "Email",
-
             loginErrorActive: false,
 
             //signUp
@@ -88,16 +79,6 @@ export default {
         }
     },
     methods: {
-        async callMyFunction() {
-            const sayHello = httpsCallable(functions, 'sayHello');
-            try {
-                const result = await sayHello({ name: 'Jesper' });
-                console.log(result);
-            } catch (error) {
-                console.error(error);
-            }
-        },
-
         DisplayLogin() {
             if (this.showSignIn) {
                 this.showSignIn = false
@@ -117,7 +98,21 @@ export default {
         Exit() {
             this.showLoginHolder = false
         },
-        Login() {
+
+        async Login() {
+            const signIn = httpsCallable(functions, 'signIn');
+            try {
+                const result = await signIn({ email: this.loginEmail, password: this.loginPassword });
+                this.isLoggedIn = true
+                this.Exit()
+                console.log(result);
+            } catch (error) {
+                console.error(error);
+            }
+            
+        },
+        async SignUp() {
+           
             this.isLoggedIn = true
             this.Exit()
         },
@@ -125,15 +120,7 @@ export default {
             this.isLoggedIn = false
             this.Exit()
         },
-        LoginMethod() {
-            if (this.loginMethodEmail) {
-                this.labelName = "Username"
-                this.loginMethodEmail = false
-            } else {
-                this.labelName = "Email"
-                this.loginMethodEmail = true
-            }
-        },
+        
     }
 }
 </script>
