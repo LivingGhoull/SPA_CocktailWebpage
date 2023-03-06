@@ -58,7 +58,7 @@
 
 <script > 
 import {functions } from '../firebase'
-import { getFunctions, httpsCallable } from "firebase/functions";// TODO: Add SDKs for Firebase products that you want to use
+import {httpsCallable } from "firebase/functions";// TODO: Add SDKs for Firebase products that you want to use
 
 export default {
     data(){
