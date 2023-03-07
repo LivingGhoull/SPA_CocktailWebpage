@@ -97,7 +97,6 @@ export default {
                         tableColums.style.paddingTop = '2%'
                         tableRow.appendChild(tableColums)  
 
-
                         let eatchDrink = document.createElement('div')
                         eatchDrink.style.backgroundColor = '#3276c9'
                         eatchDrink.style.border = '1px solid rgb(54, 39, 185)'
@@ -112,7 +111,6 @@ export default {
                         eatchDrink.addEventListener('click', function handleClick() {
                             window.location.href = `/cocktail/${drinkArray.idDrink}`
                         });
-
 
                         let drinkName = document.createElement('p')
                         drinkName.style.color = "#fff"
@@ -140,7 +138,8 @@ export default {
             console.log(`/cocktail/${drinkArray.idDrink}`)
             window.location.href = `/cocktail/${drinkArray.idDrink}`
         },
-    }
+    },
+    
 }
 </script>
 
@@ -201,7 +200,5 @@ export default {
         margin-left:5%;
         width: 90%;
     }
-
 }
-
 </style>

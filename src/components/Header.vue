@@ -8,8 +8,7 @@
         <button @click="DisplayLogin">Login</button>
         <button @click="DisplaySignIn">Sign op</button>
     </div>
-
-    <div v-if="isLoggedIn" class="userAccount">
+    <div v-else class="userAccount">
         <p>{{username}}</p>
         <button>Likes</button>
         <button @click="Logout">Logout</button>
@@ -17,7 +16,7 @@
 </div>
 
 <div v-if="showLoginHolder" id="showSignOrLog">
-    <button @click="Exit" id="exit">X</button>
+    <button @click="ExitDisplay" id="exit">X</button>
 
     <div v-if="showLogin" class="login">
         <p v-if=loginErrorActive id="error">Error: Something went wrong check your inputs!</p>
@@ -33,7 +32,7 @@
     <div v-if="showSignIn" class="login">
         <p v-if=signErrorActive id="error">Error: Something went wrong check your inputs!</p>
         <label for="">Email</label>
-        <input type="text" v-model="signEmail">
+        <input type="email" v-model="signEmail">
 
         <label for="">Username</label>
         <input type="text" v-model="signUsername">
@@ -51,14 +50,14 @@
 <div v-if="showLoginHolder" id="backgroundCheck"></div>
 </template>
 
-
 <script > 
-import {functions } from '../firebase'
-import {httpsCallable } from "firebase/functions";
+import {functions, auth } from '../firebase'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 
 export default {
     data(){
         return {
+            username: "",
             isLoggedIn: false,
             showLogin: false,
             showSignIn: false,
@@ -79,6 +78,7 @@ export default {
         }
     },
     methods: {
+        //used for displaying the login and signup
         DisplayLogin() {
             if (this.showSignIn) {
                 this.showSignIn = false
@@ -95,37 +95,62 @@ export default {
             this.showLoginHolder = true
             this.showLoginHolder = true
         },
-        Exit() {
+        ExitDisplay() {
             this.showLoginHolder = false
         },
 
-        async Login() {
-            const signIn = httpsCallable(functions, 'signIn');
-            try {
-                const result = await signIn({ email: this.loginEmail, password: this.loginPassword });
-                this.isLoggedIn = true
-                this.Exit()
-                console.log(result);
-            } catch (error) {
-                console.error(error);
-            }
+        // To login and signUp 
+        Login() {
+            signInWithEmailAndPassword(auth, this.loginEmail, this.loginPassword)
+            .then((userCredential) => {
+                const user = userCredential.user;
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(`${errorCode}, ${errorMessage}`)
+                this.loginErrorActive = true;
+            });
         },
-        async SignUp() {
-            const signUp = httpsCallable(functions, 'signUp');
-            try {
-                const result = await signUp({ email: this.signEmail, username: this.signUsername});
-                this.isLoggedIn = true
-                this.Exit()
-                console.log(result);
-            } catch (error) {
-                console.error(error);
+        SignUp() {
+            if (this.signConfirmPassword == this.signPassword) {
+                createUserWithEmailAndPassword(auth, this.signEmail, this.signPassword)
+                .then((userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+                    console.log(user)
+                    // ...
+                    this.signErrorActive = false
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(`${errorCode}, ${errorMessage}`)
+                    // ..
+                    this.signErrorActive = true    
+                });
+            } else{
+                this.signErrorActive = true
             }
         },
         Logout() {
-            this.isLoggedIn = false
-            this.Exit()
+            signOut(auth)
+            .then(() => {
+                this.isLoggedIn = false
+            })
+            .catch((error) => {
+                console.log(error)
+            })
         },
-        
+    },
+    // runs evrytime a change to authentication
+    mounted() {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                this.isLoggedIn = true;
+                this.username = user.email
+            }
+        });
     }
 }
 </script>
