@@ -143,16 +143,7 @@ export default {
                 console.log(error)
             })
         },
-    },
-    // runs evrytime a change to authentication
-    mounted() {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                this.isLoggedIn = true;
-                this.username = user.email
-            }
 
-        },
         async loginUser() {
             if(this.signPassword == this.signConfirmPassword)
             {
@@ -169,9 +160,18 @@ export default {
             }
             
         },
+    },
+    // runs evrytime a change to authentication
+    mounted() {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                this.isLoggedIn = true;
+                this.username = user.email
+            }
 
-        });
+        })
     }
+    
 }
 </script>
 

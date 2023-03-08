@@ -55,7 +55,8 @@ exports.addSubscriber = functions.https.onCall((data, context) => {
     end_subscribed_date: "",
   });
   return `userid: "", end_subscribed_date: ""`;
-  
+});
+
 exports.signIn = functions.https.onCall((data, context) => {
   return `you sign in with email: ${data.email} password: ${data.password}`;
 });
