@@ -12,10 +12,15 @@
         <p>{{username}}</p>
         <button>Likes</button>
         <button @click="Logout">Logout</button>
+        <button @click="DisplaySubscipe">Subscripe</button>
     </div>  
 </div>
 
-<div v-if="showLoginHolder" id="showSignOrLog">
+<div v-if="showSubscribe" id="Subscipe">
+
+</div>
+
+<div v-if="backgorundBlock" id="showSignOrLog">
     <button @click="ExitDisplay" id="exit">X</button>
 
     <div v-if="showLogin" class="login">
@@ -47,7 +52,7 @@
     </div>
 </div>
 
-<div v-if="showLoginHolder" id="backgroundCheck"></div>
+<div v-if="backgorundBlock" id="backgroundCheck"></div>
 </template>
 
 <script > 
@@ -61,7 +66,8 @@ export default {
             isLoggedIn: false,
             showLogin: false,
             showSignIn: false,
-            showLoginHolder: false,
+            showSubscribe: false,
+            backgorundBlock: false,
 
             //login
             loginEmail: "",
@@ -73,30 +79,34 @@ export default {
             signUsername: "",
             signPassword: "",
             signConfirmPassword: "",
-
             signErrorActive: false,
+
+            //subscripe
+            
+
         }
     },
     methods: {
-        //used for displaying the login and signup
+        //used for displaying layers
         DisplayLogin() {
             if (this.showSignIn) {
                 this.showSignIn = false
             }
             this.showLogin = true
-            this.showLoginHolder = true
-            this.showLoginHolder = true
+            this.backgorundBlock = true
         },
         DisplaySignIn() {
             if (this.showLogin) {
                 this.showLogin = false
             }
             this.showSignIn = true
-            this.showLoginHolder = true
-            this.showLoginHolder = true
+            this.backgorundBlock = true
+        },
+        DisplaySubscipe(){
+            this.showSubscribe = true
         },
         ExitDisplay() {
-            this.showLoginHolder = false
+            this.backgorundBlock = false
         },
 
         // To login and signUp 
