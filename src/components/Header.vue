@@ -207,14 +207,11 @@ export default {
                 let res = await signUpUser({email: this.signEmail, name: this.signUsername, password: this.signConfirmPassword})
 
                 console.log(res)
-                
             }
-
             else
             {
                 console.log('error 404')
             }
-            
         },
     },
     // runs evrytime a change to authentication
@@ -224,10 +221,8 @@ export default {
                 this.isLoggedIn = true;
                 this.username = user.email
             }
-
         })
     }
-    
 }
 </script>
 

@@ -8,20 +8,6 @@ const db = admin.firestore();
 // https://firebase.google.com/docs/functions/get-started
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from Firebase!");
-});
-
-exports.testText = functions.https.onRequest((request, response) => {
-  response.send("This is a test");
-});
-
-exports.sayHello = functions.https.onCall((data, context) => {
-  const name = data.name;
-  return `hello user: ${name}`;
-});
-
 exports.signUpUser = functions.https.onCall((data, context) => {
   db.collection("users").add({
     email: data.email,
@@ -37,6 +23,10 @@ exports.addLike = functions.https.onCall((data, context) => {
     cocktailid: "",
   });
   return `userid: "", cocktailid: ""`;
+});
+
+exports.removeLike = functions.https.onCall((data, context) => {
+  return "removeLike";
 });
 
 exports.addComment = functions.https.onCall((data, context) => {
@@ -55,12 +45,4 @@ exports.addSubscriber = functions.https.onCall((data, context) => {
     end_subscribed_date: "",
   });
   return `userid: "", end_subscribed_date: ""`;
-});
-
-exports.signIn = functions.https.onCall((data, context) => {
-  return `you sign in with email: ${data.email} password: ${data.password}`;
-});
-
-exports.signUp = functions.https.onCall((data, context) => {
-  return "test";
 });
