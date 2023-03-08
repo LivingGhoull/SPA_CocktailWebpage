@@ -31,7 +31,6 @@
     </div>
     
     <div v-if="showSignIn" class="login">
-        <p v-if=signErrorActive id="error">Error: Something went wrong check your inputs!</p>
         <label for="">Email</label>
         <input type="email" placeholder="Enter a email" v-model="signEmail">
 
