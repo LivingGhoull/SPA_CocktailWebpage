@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFunctions } from "firebase/functions";// TODO: Add SDKs for Firebase products that you want to use
+import { getFunctions, httpsCallable } from "firebase/functions";// TODO: Add SDKs for Firebase products that you want to use
 import { getAuth } from "firebase/auth";
 
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -25,4 +25,3 @@ export const functions = getFunctions(app);
 
 //authentication
 export const auth = getAuth(app);
-
