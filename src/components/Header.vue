@@ -48,7 +48,7 @@
         <label for="">Confirm password</label>
         <input type="password" v-model="signConfirmPassword">
 
-        <button>Login</button>
+        <button @click="loginUser">Sign up</button>
     </div>
 </div>
 
@@ -57,7 +57,7 @@
 
 
 <script > 
-import {functions } from '../firebase'
+import {auth, functions } from '../firebase'
 import { getFunctions, httpsCallable } from "firebase/functions";// TODO: Add SDKs for Firebase products that you want to use
 
 export default {
@@ -134,6 +134,22 @@ export default {
                 this.labelName = "Email"
                 this.loginMethodEmail = true
             }
+        },
+        async loginUser() {
+            if(this.signPassword == this.signConfirmPassword)
+            {
+                const signUpUser = httpsCallable(functions, 'signUpUser')
+                let res = await signUpUser({email: this.signEmail, name: this.signUsername, password: this.signConfirmPassword})
+
+                console.log(res)
+                
+            }
+
+            else
+            {
+                console.log('error 404')
+            }
+            
         },
     }
 }
