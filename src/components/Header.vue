@@ -44,7 +44,7 @@
         <label for="">Confirm password</label>
         <input type="password" placeholder="Enter a the password again" v-model="signConfirmPassword">
 
-        <button @click="SignUp">SignUp</button>
+        <button @click="loginUser">Sign up</button>
     </div>
      
     <div v-if="subInfo" class="login">
@@ -91,6 +91,7 @@
 </template>
 
 <script > 
+import { getFunctions, httpsCallable } from "firebase/functions";// TODO: Add SDKs for Firebase products that you want to use
 import {functions, auth } from '../firebase'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 
@@ -199,6 +200,23 @@ export default {
                 console.log(error)
             })
         },
+
+        async loginUser() {
+            if(this.signPassword == this.signConfirmPassword)
+            {
+                const signUpUser = httpsCallable(functions, 'signUpUser')
+                let res = await signUpUser({email: this.signEmail, name: this.signUsername, password: this.signConfirmPassword})
+
+                console.log(res)
+                
+            }
+
+            else
+            {
+                console.log('error 404')
+            }
+            
+        },
     },
     // runs evrytime a change to authentication
     mounted() {
@@ -207,8 +225,10 @@ export default {
                 this.isLoggedIn = true;
                 this.username = user.email
             }
-        });
+
+        })
     }
+    
 }
 </script>
 
