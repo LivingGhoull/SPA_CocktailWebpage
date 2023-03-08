@@ -8,8 +8,7 @@
         <button @click="DisplayLogin">Login</button>
         <button @click="DisplaySignIn">Sign op</button>
     </div>
-
-    <div v-if="isLoggedIn" class="userAccount">
+    <div v-else class="userAccount">
         <p>{{username}}</p>
         <button>Likes</button>
         <button @click="Logout">Logout</button>
@@ -17,27 +16,23 @@
 </div>
 
 <div v-if="showLoginHolder" id="showSignOrLog">
-    <button @click="Exit" id="exit">X</button>
+    <button @click="ExitDisplay" id="exit">X</button>
 
     <div v-if="showLogin" class="login">
         <p v-if=loginErrorActive id="error">Error: Something went wrong check your inputs!</p>
 
-        <label for="">{{labelName}}</label>
-        <input v-if="!loginMethodEmail" type="text" v-model="loginUserMail">
-        <input v-else type="email" v-model="loginEmail">
-
-        <label for="">Use username instead</label>
-        <input @change="LoginMethod" id="check" type="checkbox">
+        <label for="">Email</label>
+        <input type="email" v-model="loginEmail">
 
         <label for="">Password</label>
-        <input type="text" v-model="loginPassword">
-        <button @click="callMyFunction">Login</button>
+        <input type="password" v-model="loginPassword">
+        <button @click="Login">Login</button>
     </div>
     
     <div v-if="showSignIn" class="login">
         <p v-if=signErrorActive id="error">Error: Something went wrong check your inputs!</p>
         <label for="">Email</label>
-        <input type="text" v-model="signEmail">
+        <input type="email" v-model="signEmail">
 
         <label for="">Username</label>
         <input type="text" v-model="signUsername">
@@ -55,28 +50,23 @@
 <div v-if="showLoginHolder" id="backgroundCheck"></div>
 </template>
 
-
 <script > 
-import {auth, functions } from '../firebase'
 import { getFunctions, httpsCallable } from "firebase/functions";// TODO: Add SDKs for Firebase products that you want to use
+import {functions, auth } from '../firebase'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 
 export default {
     data(){
         return {
+            username: "",
             isLoggedIn: false,
             showLogin: false,
             showSignIn: false,
             showLoginHolder: false,
 
-
             //login
-            loginEmail: "jesper",
-            loginUsername: "jesper",
+            loginEmail: "",
             loginPassword: "",
-
-            loginMethodEmail: true,
-            labelName: "Email",
-
             loginErrorActive: false,
 
             //signUp
@@ -89,16 +79,7 @@ export default {
         }
     },
     methods: {
-        async callMyFunction() {
-            const sayHello = httpsCallable(functions, 'sayHello');
-            try {
-                const result = await sayHello({ name: 'Jesper' });
-                console.log(result);
-            } catch (error) {
-                console.error(error);
-            }
-        },
-
+        //used for displaying the login and signup
         DisplayLogin() {
             if (this.showSignIn) {
                 this.showSignIn = false
@@ -115,25 +96,62 @@ export default {
             this.showLoginHolder = true
             this.showLoginHolder = true
         },
-        Exit() {
+        ExitDisplay() {
             this.showLoginHolder = false
         },
+
+        // To login and signUp 
         Login() {
-            this.isLoggedIn = true
-            this.Exit()
+            signInWithEmailAndPassword(auth, this.loginEmail, this.loginPassword)
+            .then((userCredential) => {
+                const user = userCredential.user;
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(`${errorCode}, ${errorMessage}`)
+                this.loginErrorActive = true;
+            });
+        },
+        SignUp() {
+            if (this.signConfirmPassword == this.signPassword) {
+                createUserWithEmailAndPassword(auth, this.signEmail, this.signPassword)
+                .then((userCredential) => {
+                    // Signed in 
+                    const user = userCredential.user;
+                    console.log(user)
+                    // ...
+                    this.signErrorActive = false
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log(`${errorCode}, ${errorMessage}`)
+                    // ..
+                    this.signErrorActive = true    
+                });
+            } else{
+                this.signErrorActive = true
+            }
         },
         Logout() {
-            this.isLoggedIn = false
-            this.Exit()
+            signOut(auth)
+            .then(() => {
+                this.isLoggedIn = false
+            })
+            .catch((error) => {
+                console.log(error)
+            })
         },
-        LoginMethod() {
-            if (this.loginMethodEmail) {
-                this.labelName = "Username"
-                this.loginMethodEmail = false
-            } else {
-                this.labelName = "Email"
-                this.loginMethodEmail = true
+    },
+    // runs evrytime a change to authentication
+    mounted() {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                this.isLoggedIn = true;
+                this.username = user.email
             }
+
         },
         async loginUser() {
             if(this.signPassword == this.signConfirmPassword)
@@ -151,6 +169,8 @@ export default {
             }
             
         },
+
+        });
     }
 }
 </script>
