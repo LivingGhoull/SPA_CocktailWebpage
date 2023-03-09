@@ -9,20 +9,6 @@ const db = admin.firestore();
 // https://firebase.google.com/docs/functions/get-started
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from Firebase!");
-});
-
-exports.testText = functions.https.onRequest((request, response) => {
-  response.send("This is a test");
-});
-
-exports.sayHello = functions.https.onCall((data, context) => {
-  const name = data.name;
-  return `hello user: ${name}`;
-});
-
 exports.signUpUser = functions.https.onCall((data, context) => {
   db.collection("Users").add({
     id: data.id,
@@ -48,6 +34,10 @@ exports.removeLike = functions.https.onCall((data, context) => {
   likeElm.forEach((doc) => {
     return `You got this: ${doc.data()}`;
   });
+});
+
+exports.removeLike = functions.https.onCall((data, context) => {
+  return "removeLike";
 });
 
 exports.addComment = functions.https.onCall((data, context) => {
