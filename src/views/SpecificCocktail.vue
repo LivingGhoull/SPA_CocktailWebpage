@@ -53,10 +53,15 @@
 </template>
 
 <script>
-    export default {
+import { getFunctions, httpsCallable } from "firebase/functions";// TODO: Add SDKs for Firebase products that you want to use
+import {functions, auth } from '../firebase'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+    
+export default {
         props: ['id'],
         data(){
             return {
+                drinkId: '',
                 drinkName: '',
                 drinkIMG: '',
                 drinkIsAlcoholic: '',
@@ -78,6 +83,7 @@
             let data = await response.json()
             let drinkArray = data.drinks[0] 
 
+            this.drinkId = drinkArray.idDrink
             this.drinkName = drinkArray.strDrink
             this.drinkIMG = drinkArray.strDrinkThumb
             this.drinkIsAlcoholic = drinkArray.strAlcoholic
@@ -149,13 +155,22 @@
         Homepage() {
             window.location.href = `/cocktail/${drinkArray.idDrink}`
         },
-        Like() {
+        async Like() {
             let liked = document.getElementById('like')
             this.like = !this.like
 
-            if (this.like == false) {
+            if (this.like == false) 
+            {
+                const removeLike = httpsCallable(functions, 'removeLike')
+                await removeLike({itemId: this.drinkId, userid: auth.currentUser.uid})
                 liked.style.backgroundColor = '#3276c9'
-            } else {
+            } 
+            
+            else 
+            {
+                const addLike = httpsCallable(functions, 'addLike')
+                let result = await addLike({userid: auth.currentUser.uid, itemId: this.drinkId})
+                console.log(result)
                 liked.style.backgroundColor = '#F2A71E'
             }
         },

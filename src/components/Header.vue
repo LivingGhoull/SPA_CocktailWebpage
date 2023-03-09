@@ -43,7 +43,7 @@
         <label for="">Confirm password</label>
         <input type="password" placeholder="Enter a the password again" v-model="signConfirmPassword">
 
-        <button @click="loginUser">Sign up</button>
+        <button @click="SignUp">Sign up</button>
     </div>
      
     <div v-if="subInfo" class="login">
@@ -125,6 +125,13 @@ export default {
         }
     },
     methods: {
+        async signUpUser() {
+            if(this.signPassword == this.signConfirmPassword)
+            {
+                const signUpUser = httpsCallable(functions, 'signUpUser')
+                await signUpUser({id: auth.currentUser.uid ,email: this.signEmail, name: this.signUsername, password: this.signConfirmPassword})
+            }  
+        },
         //used for displaying layers
         DisplayLogin() {
             this.showLogin = true
@@ -150,9 +157,16 @@ export default {
             this.showSub = false
             this.backgorundBlock = false
         },
-        Subscribe(){
-            this.ExitDisplay()
+        async Subscribe(){
+            var dateObj = new Date();
+            var month = dateObj.getUTCMonth() + 2;
+            var day = dateObj.getUTCDate();
+            var year = dateObj.getUTCFullYear();
+            let newdate = year + "-" + month + "-" + day;
 
+            const addSubscriber = httpsCallable(functions, 'addSubscriber')
+            await addSubscriber({userid: auth.currentUser.uid, subdate: newdate})
+            this.ExitDisplay()
         },
         // To login and signUp 
         Login() {
@@ -174,9 +188,8 @@ export default {
                 .then((userCredential) => {
                     // Signed in 
                     const user = userCredential.user;
-                    console.log(user)
-                    // ...
                     this.ExitDisplay()
+                    this.signUpUser()
                     this.signErrorActive = false
                 })
                 .catch((error) => {
@@ -198,23 +211,6 @@ export default {
             .catch((error) => {
                 console.log(error)
             })
-        },
-
-        async loginUser() {
-            if(this.signPassword == this.signConfirmPassword)
-            {
-                const signUpUser = httpsCallable(functions, 'signUpUser')
-                let res = await signUpUser({email: this.signEmail, name: this.signUsername, password: this.signConfirmPassword})
-
-                console.log(res)
-                
-            }
-
-            else
-            {
-                console.log('error 404')
-            }
-            
         },
     },
     // runs evrytime a change to authentication
