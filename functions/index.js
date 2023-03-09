@@ -1,3 +1,4 @@
+import {collection, query, where, getDocs} from "firebase/firestore";
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp();
@@ -9,7 +10,8 @@ const db = admin.firestore();
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 exports.signUpUser = functions.https.onCall((data, context) => {
-  db.collection("users").add({
+  db.collection("Users").add({
+    id: data.id,
     email: data.email,
     name: data.name,
     password: data.password,
@@ -19,10 +21,19 @@ exports.signUpUser = functions.https.onCall((data, context) => {
 
 exports.addLike = functions.https.onCall((data, context) => {
   db.collection("Likes").add({
-    userid: "",
-    cocktailid: "",
+    userid: data.userid,
+    itemId: data.itemId,
   });
-  return `userid: "", cocktailid: ""`;
+  return `userid: ${data.userid}, cocktailid: ${data.cocktailid}`;
+});
+
+exports.removeLike = functions.https.onCall((data, context) => {
+  const like = query(collection(db, "Likes"), where("userid", "==", data.userid), where("itemId", "==", data.itemId));
+  const likeElm= getDocs(like);
+
+  likeElm.forEach((doc) => {
+    return `You got this: ${doc.data()}`;
+  });
 });
 
 exports.removeLike = functions.https.onCall((data, context) => {
@@ -41,8 +52,8 @@ exports.addComment = functions.https.onCall((data, context) => {
 
 exports.addSubscriber = functions.https.onCall((data, context) => {
   db.collection("Subscribers").add({
-    userid: "",
-    end_subscribed_date: "",
+    userid: data.userid,
+    end_subscribed_date: data.subdate,
   });
-  return `userid: "", end_subscribed_date: ""`;
+  return `userid: ${data.userid}, end_subscribed_date: ${data.subdate}`;
 });

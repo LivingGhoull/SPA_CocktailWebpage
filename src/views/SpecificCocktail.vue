@@ -65,16 +65,15 @@ export default {
     props: ['id'],
     data(){
         return {
+            drinkId: '',
             drinkName: '',
             drinkIMG: '',
             drinkIsAlcoholic: '',
             drinkCategories: '',
             drinkGlass: '',
-
             drinkIngredients: [],
             drinkMeasurement: [],
             drinkInstruction: '',
-
             like: false,
             IslogedIn: false,
         }
@@ -156,16 +155,23 @@ export default {
         Homepage() {
             window.location.href = `/cocktail/${drinkArray.idDrink}`
         },
-        Like() {
-            if (auth.currentUser) {
-                let liked = document.getElementById('like')
-                this.like = !this.like
+        async Like() {
+            let liked = document.getElementById('like')
+            this.like = !this.like
 
-                if (this.like == false) {
-                    liked.style.backgroundColor = '#3276c9'
-                } else {
-                    liked.style.backgroundColor = '#F2A71E'
-                }
+            if (this.like == false) 
+            {
+                const removeLike = httpsCallable(functions, 'removeLike')
+                await removeLike({itemId: this.drinkId, userid: auth.currentUser.uid})
+                liked.style.backgroundColor = '#3276c9'
+            } 
+            
+            else 
+            {
+                const addLike = httpsCallable(functions, 'addLike')
+                let result = await addLike({userid: auth.currentUser.uid, itemId: this.drinkId})
+                console.log(result)
+                liked.style.backgroundColor = '#F2A71E'
             }
         },
         Comment() {
