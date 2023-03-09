@@ -15,7 +15,6 @@
                     <p>Categories: </p>
                     <p>Glass: </p>
                 </div>
-
                 <div>  
                     <p>{{ drinkIsAlcoholic }}</p>
                     <p>{{ drinkCategories }}</p>
@@ -41,90 +40,99 @@
     </div>
 
     <div id="comments">
-        <Input>Write comment</Input>
+        <div id="userWriteComment">
+            <p class="username">Username:</p>
+            <input type="text" placeholder="Wirte a comment">
+            <button @click="">Submit</button>
+        </div>
+
         <div id="userInComments">
             <div class="user">
                 <p class="username">Username:</p>
                 <p class="usercomment">This is a comment </p>
             </div>
         </div>
-        <button>See all commemnts</button>
+        <button @click="SeeAllComments">See all commemnts</button>
     </div>
 </template>
 
 <script>
-    export default {
-        props: ['id'],
-        data(){
-            return {
-                drinkName: '',
-                drinkIMG: '',
-                drinkIsAlcoholic: '',
-                drinkCategories: '',
-                drinkGlass: '',
+import { getFunctions, httpsCallable } from "firebase/functions";
+import {functions, auth } from '../firebase'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 
-                drinkIngredients: [],
-                drinkMeasurement: [],
-                drinkInstruction: '',
+export default {
+    props: ['id'],
+    data(){
+        return {
+            drinkName: '',
+            drinkIMG: '',
+            drinkIsAlcoholic: '',
+            drinkCategories: '',
+            drinkGlass: '',
 
-                like: false,
-            }
-        },
-        created() {
-        window.addEventListener('load', async () => {
-                    
-            let url = `https://thecocktaildb.com/api/json/v1/1/lookup.php?i=${this.id}`
-            let response = await fetch(url)
-            let data = await response.json()
-            let drinkArray = data.drinks[0] 
+            drinkIngredients: [],
+            drinkMeasurement: [],
+            drinkInstruction: '',
 
-            this.drinkName = drinkArray.strDrink
-            this.drinkIMG = drinkArray.strDrinkThumb
-            this.drinkIsAlcoholic = drinkArray.strAlcoholic
-            this.drinkCategories = drinkArray.strCategory
-            this.drinkGlass = drinkArray.strDrink
-            this.drinkInstruction = drinkArray.strInstructions
-
-            this.drinkIngredients = [
-                this.drinkIngredients[0] = drinkArray.strIngredient1,
-                this.drinkIngredients[1] = drinkArray.strIngredient2,
-                this.drinkIngredients[2] = drinkArray.strIngredient3,
-                this.drinkIngredients[3] = drinkArray.strIngredient4,
-                this.drinkIngredients[4] = drinkArray.strIngredient5,
-                this.drinkIngredients[5] = drinkArray.strIngredient6,
-                this.drinkIngredients[6] = drinkArray.strIngredient7,
-                this.drinkIngredients[7] = drinkArray.strIngredient8,
-                this.drinkIngredients[8] = drinkArray.strIngredient9,
-                this.drinkIngredients[9] = drinkArray.strIngredient10,
-                this.drinkIngredients[10] = drinkArray.strIngredient11,
-                this.drinkIngredients[11] = drinkArray.strIngredient12,
-                this.drinkIngredients[12] = drinkArray.strIngredient13,
-                this.drinkIngredients[13] = drinkArray.strIngredient14,
-                this.drinkIngredients[14] = drinkArray.strIngredient15,
-            ]
-
-            this.drinkMeasurement = [
-                this.drinkMeasurement[0] = drinkArray.strMeasure1,
-                this.drinkMeasurement[1] = drinkArray.strMeasure2,
-                this.drinkMeasurement[2] = drinkArray.strMeasure3,
-                this.drinkMeasurement[3] = drinkArray.strMeasure4,
-                this.drinkMeasurement[4] = drinkArray.strMeasure5,
-                this.drinkMeasurement[5] = drinkArray.strMeasure6,
-                this.drinkMeasurement[6] = drinkArray.strMeasure7,
-                this.drinkMeasurement[7] = drinkArray.strMeasure8,
-                this.drinkMeasurement[8] = drinkArray.strMeasure9,
-                this.drinkMeasurement[9] = drinkArray.strMeasure10,
-                this.drinkMeasurement[10] = drinkArray.strMeasure11,
-                this.drinkMeasurement[11] = drinkArray.strMeasure12,
-                this.drinkMeasurement[12] = drinkArray.strMeasure13,
-                this.drinkMeasurement[13] = drinkArray.strMeasure14,
-                this.drinkMeasurement[14] = drinkArray.strMeasure15,
-            ]
-
-            this.AllIncredients()
+            like: false,
+            IslogedIn: false,
         }
-        )},
-        methods: {
+    },
+    created() {
+    window.addEventListener('load', async () => {
+                
+        let url = `https://thecocktaildb.com/api/json/v1/1/lookup.php?i=${this.id}`
+        let response = await fetch(url)
+        let data = await response.json()
+        let drinkArray = data.drinks[0] 
+
+        this.drinkName = drinkArray.strDrink
+        this.drinkIMG = drinkArray.strDrinkThumb
+        this.drinkIsAlcoholic = drinkArray.strAlcoholic
+        this.drinkCategories = drinkArray.strCategory
+        this.drinkGlass = drinkArray.strDrink
+        this.drinkInstruction = drinkArray.strInstructions
+
+        this.drinkIngredients = [
+            this.drinkIngredients[0] = drinkArray.strIngredient1,
+            this.drinkIngredients[1] = drinkArray.strIngredient2,
+            this.drinkIngredients[2] = drinkArray.strIngredient3,
+            this.drinkIngredients[3] = drinkArray.strIngredient4,
+            this.drinkIngredients[4] = drinkArray.strIngredient5,
+            this.drinkIngredients[5] = drinkArray.strIngredient6,
+            this.drinkIngredients[6] = drinkArray.strIngredient7,
+            this.drinkIngredients[7] = drinkArray.strIngredient8,
+            this.drinkIngredients[8] = drinkArray.strIngredient9,
+            this.drinkIngredients[9] = drinkArray.strIngredient10,
+            this.drinkIngredients[10] = drinkArray.strIngredient11,
+            this.drinkIngredients[11] = drinkArray.strIngredient12,
+            this.drinkIngredients[12] = drinkArray.strIngredient13,
+            this.drinkIngredients[13] = drinkArray.strIngredient14,
+            this.drinkIngredients[14] = drinkArray.strIngredient15,
+        ]
+
+        this.drinkMeasurement = [
+            this.drinkMeasurement[0] = drinkArray.strMeasure1,
+            this.drinkMeasurement[1] = drinkArray.strMeasure2,
+            this.drinkMeasurement[2] = drinkArray.strMeasure3,
+            this.drinkMeasurement[3] = drinkArray.strMeasure4,
+            this.drinkMeasurement[4] = drinkArray.strMeasure5,
+            this.drinkMeasurement[5] = drinkArray.strMeasure6,
+            this.drinkMeasurement[6] = drinkArray.strMeasure7,
+            this.drinkMeasurement[7] = drinkArray.strMeasure8,
+            this.drinkMeasurement[8] = drinkArray.strMeasure9,
+            this.drinkMeasurement[9] = drinkArray.strMeasure10,
+            this.drinkMeasurement[10] = drinkArray.strMeasure11,
+            this.drinkMeasurement[11] = drinkArray.strMeasure12,
+            this.drinkMeasurement[12] = drinkArray.strMeasure13,
+            this.drinkMeasurement[13] = drinkArray.strMeasure14,
+            this.drinkMeasurement[14] = drinkArray.strMeasure15,
+        ]
+        this.AllIncredients()
+    }
+    )},
+    methods: {
         async GetRandomDrink() {
             let url = 'https://thecocktaildb.com/api/json/v1/1/random.php'
             let response = await fetch(url)
@@ -144,26 +152,38 @@
                 li.style.padding = '2px'
                 ul.appendChild(li)    
             }
-
         },
         Homepage() {
             window.location.href = `/cocktail/${drinkArray.idDrink}`
         },
         Like() {
-            let liked = document.getElementById('like')
-            this.like = !this.like
+            if (auth.currentUser) {
+                let liked = document.getElementById('like')
+                this.like = !this.like
 
-            if (this.like == false) {
-                liked.style.backgroundColor = '#3276c9'
-            } else {
-                liked.style.backgroundColor = '#F2A71E'
+                if (this.like == false) {
+                    liked.style.backgroundColor = '#3276c9'
+                } else {
+                    liked.style.backgroundColor = '#F2A71E'
+                }
             }
         },
-    }}
+        Comment() {
+            if (auth.currentUser) {
+                //wites a commetn
+            } else {
+
+            }
+        },
+        SeeAllComments() {
+            
+        },  
+    },
+}
+
 </script>
 
 <style scoped>
-
     /* Underheader */
     #underHeader {
         display: flex;
@@ -256,6 +276,18 @@
         padding-left: 40%;
     }
 
+    #comments ::placeholder{
+        color: #fff;
+    }
+
+    #userWriteComment {
+        font-family: Arial, sans-serif;
+        color: #fff;
+        margin-top: 2%;
+        
+        
+    }
+
     #comments {
         border-top: 2px solid rgb(54, 39, 185);
         display: flex;
@@ -268,10 +300,17 @@
         margin-right: 40%;
         margin-bottom: 2%;
         margin-top: 2%;
-
     }
 
-    .user {
+    #userWriteComment .username {
+        padding-left: 2%;
+        padding-right: 2%;
+        
+        font-weight: bold;
+        margin: auto
+    }
+
+    .user, #userWriteComment {
         display: flex;
         background-color:#F2A71E;
         margin-left: 20%;
@@ -281,11 +320,16 @@
         margin-bottom: 5px;
     }
 
+    #userInComments {
+        margin-top: 2%;
+    }
+
     .user .username {
         padding-left: 2%;
         padding-right: 2%;
         font-weight: bold;
     }
+
 @media (pointer:none), (pointer:coarse) {
     #name{
         font-size: small;
