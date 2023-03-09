@@ -90,7 +90,7 @@
 </template>
 
 <script > 
-import { getFunctions, httpsCallable } from "firebase/functions";// TODO: Add SDKs for Firebase products that you want to use
+import { getFunctions, httpsCallable } from "firebase/functions";
 import {functions, auth } from '../firebase'
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 
