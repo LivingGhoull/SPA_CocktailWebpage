@@ -6,13 +6,13 @@ import { getFunctions, httpsCallable } from "firebase/functions";// TODO: Add SD
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyALP4TQvfwCUJbWlpXKtIfz-ZkOYGD8lkw",
-  authDomain: "spacocktailwebpage.firebaseapp.com",
-  projectId: "spacocktailwebpage",
-  storageBucket: "spacocktailwebpage.appspot.com",
-  messagingSenderId: "141136707588",
-  appId: "1:141136707588:web:ab52ac442f638474b9b551",
-  measurementId: "G-JPLHB71JEG"
+  apiKey: " ",
+  authDomain: " ",
+  projectId: " ",
+  storageBucket: " ",
+  messagingSenderId: " ",
+  appId: " ",
+  measurementId: " "
 };
 
 // Initialize Firebase
